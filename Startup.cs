@@ -27,6 +27,7 @@ namespace VehicleDealer.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAutoMapper();
+            services.AddCors();
             services.AddDbContext<VegaDbContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:Default"]));
             services.AddMvc();
         }
@@ -39,6 +40,7 @@ namespace VehicleDealer.API
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().AllowCredentials());
             app.UseMvc();
         }
     }
