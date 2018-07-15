@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace VehicleDealer.API.Models
+namespace VehicleDealer.API.Core.Models
 {
     public class Make
     {

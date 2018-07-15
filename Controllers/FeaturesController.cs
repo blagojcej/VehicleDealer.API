@@ -4,7 +4,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using VehicleDealer.API.Controllers.Resources;
-using VehicleDealer.API.Models;
+using VehicleDealer.API.Core.Models;
 using VehicleDealer.API.Persistance;
 
 namespace VehicleDealer.API.Controllers

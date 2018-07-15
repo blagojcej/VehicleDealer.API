@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using VehicleDealer.API.Models;
+using VehicleDealer.API.Core.Models;
 
 namespace VehicleDealer.API.Persistance
 {

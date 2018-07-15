@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
-using VehicleDealer.API.Models;
+using VehicleDealer.API.Core.Models;
 
-namespace VehicleDealer.API.Persistance
+namespace VehicleDealer.API.Core
 {
     public interface IVehicleRepository
     {

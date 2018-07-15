@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using VehicleDealer.API.Controllers.Resources;
-using VehicleDealer.API.Models;
+using VehicleDealer.API.Core.Models;
 
 namespace VehicleDealer.API.Mapping
 {

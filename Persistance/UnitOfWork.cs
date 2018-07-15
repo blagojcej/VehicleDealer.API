@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using VehicleDealer.API.Core;
 
 namespace VehicleDealer.API.Persistance
 {

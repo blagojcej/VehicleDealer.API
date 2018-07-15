@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using VehicleDealer.API.Models;
+using VehicleDealer.API.Core;
+using VehicleDealer.API.Core.Models;
 
 namespace VehicleDealer.API.Persistance
 {
