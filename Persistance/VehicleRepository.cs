@@ -1,9 +1,12 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using VehicleDealer.API.Core;
 using VehicleDealer.API.Core.Models;
+using VehicleDealer.API.Extensions;
 
 namespace VehicleDealer.API.Persistance
 {
@@ -38,19 +41,19 @@ namespace VehicleDealer.API.Persistance
             _context.Vehicles.Remove(vehicle);
         }
 
-        public async Task<IEnumerable<Vehicle>> GetVehicles(Filter filter, bool includeRelated = true)
+        public async Task<IEnumerable<Vehicle>> GetVehicles(VehicleQuery queryObject, bool includeRelated = true)
         {
             if (!includeRelated)
             {
                 var queryOnlyVehicles = _context.Vehicles.AsQueryable();
 
-                if (filter.MakeId.HasValue)
+                if (queryObject.MakeId.HasValue)
                 {
-                    queryOnlyVehicles = queryOnlyVehicles.Where(v => v.Model.MakeId == filter.MakeId.Value);
+                    queryOnlyVehicles = queryOnlyVehicles.Where(v => v.Model.MakeId == queryObject.MakeId.Value);
                 }
-                if (filter.ModelId.HasValue)
+                if (queryObject.ModelId.HasValue)
                 {
-                    queryOnlyVehicles = queryOnlyVehicles.Where(v => v.ModelId == filter.ModelId.Value);
+                    queryOnlyVehicles = queryOnlyVehicles.Where(v => v.ModelId == queryObject.ModelId.Value);
                 }
 
                 return await queryOnlyVehicles.ToListAsync();
@@ -63,18 +66,49 @@ namespace VehicleDealer.API.Persistance
             .ThenInclude(m => m.Make)
             .AsQueryable();
 
-            if (filter.MakeId.HasValue)
+            if (queryObject.MakeId.HasValue)
             {
-                query = query.Where(v => v.Model.MakeId == filter.MakeId.Value);
+                query = query.Where(v => v.Model.MakeId == queryObject.MakeId.Value);
             }
 
-            if (filter.ModelId.HasValue)
+            if (queryObject.ModelId.HasValue)
             {
-                query = query.Where(v => v.ModelId == filter.ModelId.Value);
+                query = query.Where(v => v.ModelId == queryObject.ModelId.Value);
             }
 
+            var columnsMap = new Dictionary<string, Expression<Func<Vehicle, object>>>()
+            {
+                ["make"] = v => v.Model.Make.Name,
+                ["model"] = v => v.Model.Name,
+                ["contactName"] = v => v.ContactName,
+                // ["id"] = v => v.Id,
+            };
+
+            // query = ApplyOrdering(queryObject, query, columnsMap);
+            query = query.ApplyOrdering<Vehicle>(queryObject, columnsMap);
+
+            /*/
+            if (queryObject.SortBy == "make")
+            {
+                query = (queryObject.IsSortAscending) ? query.OrderBy(v => v.Model.Make.Name) : query.OrderByDescending(v => v.Model.Make.Name);
+            }
+            if (queryObject.SortBy == "model")
+            {
+                query = (queryObject.IsSortAscending) ? query.OrderBy(v => v.Model.Name) : query.OrderByDescending(v => v.Model.Name);
+            }
+            if (queryObject.SortBy == "contactName")
+            {
+                query = (queryObject.IsSortAscending) ? query.OrderBy(v => v.ContactName) : query.OrderByDescending(v => v.ContactName);
+            }
+            if (queryObject.SortBy == "id")
+            {
+                query = (queryObject.IsSortAscending) ? query.OrderBy(v => v.Id) : query.OrderByDescending(v => v.Id);
+            }
+            */
 
             return await query.ToListAsync();
         }
+
+
     }
 }

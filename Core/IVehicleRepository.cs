@@ -9,6 +9,6 @@ namespace VehicleDealer.API.Core
         Task<Vehicle> GetVehicle(int id, bool includeRelated = true);
         void Add(Vehicle vehicle);
         void Remove(Vehicle vehicle);
-        Task<IEnumerable<Vehicle>> GetVehicles(Filter filter,bool includeRelated=true);
+        Task<IEnumerable<Vehicle>> GetVehicles(VehicleQuery filter,bool includeRelated=true);
     }
 }
