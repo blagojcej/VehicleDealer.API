@@ -129,12 +129,12 @@ namespace VehicleDealer.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<VehicleResource>> GetVehicles(VehicleQueryResource filterResource)
+        public async Task<QueryResultResource<VehicleResource>> GetVehicles(VehicleQueryResource filterResource)
         {
             var filter = _mapper.Map<VehicleQueryResource, VehicleQuery>(filterResource);
-            var vehicles = await _repository.GetVehicles(filter);
+            var queryResult = await _repository.GetVehicles(filter);
 
-            return _mapper.Map<IEnumerable<Vehicle>, IEnumerable<VehicleResource>>(vehicles);
+            return _mapper.Map<QueryResult<Vehicle>, QueryResultResource<VehicleResource>>(queryResult);
         }
     }
 }

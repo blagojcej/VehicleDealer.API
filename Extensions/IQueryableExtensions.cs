@@ -22,5 +22,14 @@ namespace VehicleDealer.API.Extensions
                 return query.OrderByDescending(columnsMap[queryObject.SortBy]);
             }
         }
+
+        public static IQueryable<T> ApplyPaging<T>(this IQueryable<T> query, IQueryObject queryObject)
+        {
+            if (queryObject.Page <= 0)
+                queryObject.Page = 1;
+            if (queryObject.PageSize <= 0)
+                queryObject.PageSize = 10;
+            return query.Skip((queryObject.Page - 1) * queryObject.PageSize).Take(queryObject.PageSize);
+        }
     }
 }

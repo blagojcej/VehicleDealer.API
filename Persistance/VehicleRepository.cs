@@ -41,23 +41,9 @@ namespace VehicleDealer.API.Persistance
             _context.Vehicles.Remove(vehicle);
         }
 
-        public async Task<IEnumerable<Vehicle>> GetVehicles(VehicleQuery queryObject, bool includeRelated = true)
+        public async Task<QueryResult<Vehicle>> GetVehicles(VehicleQuery queryObject)
         {
-            if (!includeRelated)
-            {
-                var queryOnlyVehicles = _context.Vehicles.AsQueryable();
-
-                if (queryObject.MakeId.HasValue)
-                {
-                    queryOnlyVehicles = queryOnlyVehicles.Where(v => v.Model.MakeId == queryObject.MakeId.Value);
-                }
-                if (queryObject.ModelId.HasValue)
-                {
-                    queryOnlyVehicles = queryOnlyVehicles.Where(v => v.ModelId == queryObject.ModelId.Value);
-                }
-
-                return await queryOnlyVehicles.ToListAsync();
-            }
+            var result = new QueryResult<Vehicle>();
 
             var query = _context.Vehicles
             .Include(v => v.Features)
@@ -87,7 +73,10 @@ namespace VehicleDealer.API.Persistance
             // query = ApplyOrdering(queryObject, query, columnsMap);
             query = query.ApplyOrdering<Vehicle>(queryObject, columnsMap);
 
-            /*/
+            result.TotalItems = await query.CountAsync();
+            query = query.ApplyPaging<Vehicle>(queryObject);
+
+            /*
             if (queryObject.SortBy == "make")
             {
                 query = (queryObject.IsSortAscending) ? query.OrderBy(v => v.Model.Make.Name) : query.OrderByDescending(v => v.Model.Make.Name);
@@ -106,7 +95,9 @@ namespace VehicleDealer.API.Persistance
             }
             */
 
-            return await query.ToListAsync();
+            result.Items = await query.ToListAsync();
+
+            return result;
         }
 
 
