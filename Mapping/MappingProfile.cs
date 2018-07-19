@@ -11,6 +11,7 @@ namespace VehicleDealer.API.Mapping
         public MappingProfile()
         {
             //Domain to API Resources
+            CreateMap<Photo, PhotoResource>();
             CreateMap(typeof(QueryResult<>), typeof(QueryResultResource<>));
             CreateMap<Make, MakeResource>();
             CreateMap<Model, KeyValuePairResource>();
