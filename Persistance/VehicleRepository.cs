@@ -68,13 +68,13 @@ namespace VehicleDealer.API.Persistance
                 ["model"] = v => v.Model.Name,
                 ["contactName"] = v => v.ContactName,
                 // ["id"] = v => v.Id,
-            };
-
-            // query = ApplyOrdering(queryObject, query, columnsMap);
-            query = query.ApplyOrdering<Vehicle>(queryObject, columnsMap);
+            };            
 
             result.TotalItems = await query.CountAsync();
             query = query.ApplyPaging<Vehicle>(queryObject);
+
+            // query = ApplyOrdering(queryObject, query, columnsMap);
+            query = query.ApplyOrdering<Vehicle>(queryObject, columnsMap);
 
             /*
             if (queryObject.SortBy == "make")

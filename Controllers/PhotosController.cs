@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,16 +23,25 @@ namespace VehicleDealer.API.Controllers
         private readonly IVehicleRepository _repository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public PhotosController(IHostingEnvironment host, IVehicleRepository repository, IUnitOfWork unitOfWork, IMapper mapper, IOptionsSnapshot<PhotoSettings> options)
+        private readonly IPhotoRepository _photosRepository;
+
+        public PhotosController(IHostingEnvironment host,
+        IVehicleRepository repository,
+        IUnitOfWork unitOfWork,
+        IMapper mapper,
+        IOptionsSnapshot<PhotoSettings> options,
+        IPhotoRepository photosRepository)
         {
             this.photoSettings = options.Value;
             this._mapper = mapper;
+            this._photosRepository = photosRepository;
             this._unitOfWork = unitOfWork;
             this._repository = repository;
             this._host = host;
 
         }
 
+        // In Postman the name of the parameter for file must be the sname name as the parameter for this function
         [HttpPost]
         public async Task<IActionResult> Upload(int vehicleId, IFormFile file)
         {
@@ -74,6 +84,13 @@ namespace VehicleDealer.API.Controllers
             await _unitOfWork.CompleteAsync();
 
             return Ok(_mapper.Map<Photo, PhotoResource>(photo));
+        }
+
+        [HttpGet]
+        public async Task<IEnumerable<PhotoResource>> GetPhotos(int vehicleId)
+        {
+            var photos = await _photosRepository.GetPhotos(vehicleId);
+            return _mapper.Map<IEnumerable<Photo>, IEnumerable<PhotoResource>>(photos);
         }
     }
 }
