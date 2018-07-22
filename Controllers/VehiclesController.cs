@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using VehicleDealer.API.Controllers.Resources;
@@ -25,6 +26,7 @@ namespace VehicleDealer.API.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> CreateVehicle([FromBody]SaveVehicleResource vehicleResource)
         {
             if (!ModelState.IsValid)
@@ -62,6 +64,7 @@ namespace VehicleDealer.API.Controllers
         }
 
         [HttpPut("{id}")] // /api/vehicle/{id}
+        [Authorize]
         public async Task<IActionResult> UpdateVehicle(int id, [FromBody]SaveVehicleResource vehicleResource)
         {
             if (!ModelState.IsValid)
@@ -99,6 +102,7 @@ namespace VehicleDealer.API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteVehicle(int id)
         {
             // var vehicle = await _context.Vehicles.FindAsync(id);
